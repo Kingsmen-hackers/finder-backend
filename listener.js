@@ -79,6 +79,8 @@ const processRequestCreated = async ({
     toBlock: latestBlockNumber,
   });
 
+  console.log(events);
+
   // Process the events
   events.forEach(async (event) => {
     const address = event.address;

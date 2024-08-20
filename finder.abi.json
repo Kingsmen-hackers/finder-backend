@@ -77,6 +77,12 @@
         "internalType": "string[]",
         "name": "images",
         "type": "string[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sellerId",
+        "type": "uint256"
       }
     ],
     "name": "OfferCreated",
@@ -170,6 +176,48 @@
         "internalType": "uint8",
         "name": "lifecycle",
         "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "buyerId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "sellerIds",
+        "type": "uint256[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "int256",
+        "name": "sellersPriceQuote",
+        "type": "int256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "lockedSellerId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "createdAt",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "updatedAt",
+        "type": "uint256"
       }
     ],
     "name": "RequestCreated",
