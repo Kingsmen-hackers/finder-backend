@@ -13,6 +13,8 @@ const Request = new Schema(
     signature: String,
     requestId: Number,
     buyerAddress: String,
+    images: [String],
+    lifecycle: Number,
   },
   {
     timestamps: {

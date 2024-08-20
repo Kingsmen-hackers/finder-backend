@@ -6,8 +6,11 @@ const cors = require("cors");
 require("dotenv").config();
 const RequestModel = require("./models/Request.model");
 const app = express();
+const CONTRACT_ID_EVM = "0x00000000000000000000000000000000004783f1";
 const port = process.env.PORT || 5100;
-
+const finderABI = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "./finder.abi.json"), "utf8")
+);
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -23,6 +26,7 @@ app.get("/requests/:buyerAddress", async (req, res) => {
     const buyers = await RequestModel.find({
       buyerAddress: req.params.buyerAddress,
     });
+
     return res.json(buyers);
   } catch (error) {
     console.error(error);

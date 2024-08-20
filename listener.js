@@ -89,6 +89,8 @@ const processRequestCreated = async ({
     const signature = event.signature;
     const requestId = event.returnValues["requestId"];
     const buyerAddress = event.returnValues["buyerAddress"];
+    const images = event.returnValues["images"];
+    const lifecycle = event.returnValues["lifecycle"];
     // get timestamp from block
     const block = await web3.eth.getBlock(event.blockNumber);
     event.timestamp = block.timestamp;
@@ -102,6 +104,8 @@ const processRequestCreated = async ({
         signature,
         requestId,
         buyerAddress,
+        images,
+        lifecycle,
       },
       {
         upsert: true,
