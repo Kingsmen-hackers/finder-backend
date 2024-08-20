@@ -37,9 +37,7 @@ app.get("/requests/:buyerAddress", async (req, res) => {
 app.get("/requestId/:id", async (req, res) => {
   try {
     const request = await RequestModel.find({
-      requestId: {
-        $regex: new RegExp(`^${req.params.id}$`, "i"),
-      },
+      requestId: req.params.id,
     });
 
     return res.json(request);
