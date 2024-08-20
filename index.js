@@ -47,7 +47,7 @@ app.get("/requestId/:id", async (req, res) => {
   }
 });
 
-app.get("/requests", async (req, res) => {
+app.post("/requests", async (req, res) => {
   const { sellerLat, sellerLong } = req.body;
   try {
     const requests = await RequestModel.find();
