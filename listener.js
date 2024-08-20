@@ -79,8 +79,6 @@ const processRequestCreated = async ({
     toBlock: latestBlockNumber,
   });
 
-  console.log(events);
-
   // Process the events
   events.forEach(async (event) => {
     const address = event.address;
@@ -95,7 +93,7 @@ const processRequestCreated = async ({
     const block = await web3.eth.getBlock(event.blockNumber);
     event.timestamp = block.timestamp;
 
-    await RequestModel.updateOne(
+    const result = await RequestModel.updateOne(
       { transactionHash },
       {
         address,
@@ -111,6 +109,7 @@ const processRequestCreated = async ({
         upsert: true,
       }
     );
+    console.log(result);
   });
 };
 const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {

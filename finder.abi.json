@@ -31,6 +31,11 @@
   },
   {
     "inputs": [],
+    "name": "Marketplace__UnauthorizedBuyer",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "Marketplace__UnauthorizedRemoval",
     "type": "error"
   },
@@ -66,6 +71,12 @@
         "internalType": "uint256",
         "name": "requestId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string[]",
+        "name": "images",
+        "type": "string[]"
       }
     ],
     "name": "OfferCreated",
@@ -147,6 +158,18 @@
         "internalType": "int256",
         "name": "longitude",
         "type": "int256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string[]",
+        "name": "images",
+        "type": "string[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "lifecycle",
+        "type": "uint8"
       }
     ],
     "name": "RequestCreated",
@@ -516,6 +539,25 @@
       {
         "internalType": "uint256",
         "name": "updatedAt",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "userStoreCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
         "type": "uint256"
       }
     ],
