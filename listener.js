@@ -15,7 +15,6 @@ mongoose.set("debug", process.env.NODE_ENV != "production");
 const finderABI = JSON.parse(
   fs.readFileSync(path.join(__dirname, "./finder.abi.json"), "utf8")
 );
-const eventNames = ["RequestCreated", "RequestAccepted", "OfferCreated"];
 
 // get websocket from aurora api
 const web3 = new Web3(process.env.CONTRACT_RPC);
@@ -51,6 +50,7 @@ const getMarketPlaceEvents = async () => {
     };
 
     await processRequestCreated(option);
+    await processOfferCreated(option);
 
     lastScannedBlock = lastScannedBlockOffset;
 
@@ -100,6 +100,40 @@ const processRequestCreated = async ({
         signature,
         requestId,
         buyerAddress,
+      },
+      {
+        upsert: true,
+      }
+    );
+  });
+};
+const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
+  const events = await HouseNFTEvent.getPastEvents("OfferCreated", {
+    fromBlock: lastScannedBlock + 1,
+    toBlock: latestBlockNumber,
+  });
+
+  // Process the events
+  events.forEach(async (event) => {
+    const address = event.address;
+    const transactionHash = event.transactionHash;
+    const eventName = event.event;
+    const signature = event.signature;
+    const offerId = event.returnValues["offerId"];
+    const sellerAddress = event.returnValues["sellerAddress"];
+    // get timestamp from block
+    const block = await web3.eth.getBlock(event.blockNumber);
+    event.timestamp = block.timestamp;
+
+    await OfferModel.updateOne(
+      { transactionHash },
+      {
+        address,
+        transactionHash,
+        eventName,
+        signature,
+        offerId,
+        sellerAddress,
       },
       {
         upsert: true,
