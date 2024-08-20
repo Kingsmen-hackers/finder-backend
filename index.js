@@ -22,7 +22,9 @@ mongoose.set("debug", process.env.NODE_ENV != "production");
 app.get("/requests/:buyerAddress", async (req, res) => {
   try {
     const buyers = await RequestModel.find({
-      buyerAddress: req.params.buyerAddress,
+      buyerAddress: {
+        $regex: new RegExp(`^${req.params.buyerAddress}$`, "i"),
+      },
     });
 
     return res.json(buyers);
