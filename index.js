@@ -34,7 +34,7 @@ app.get("/requests/:buyerAddress", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
-app.get("/requests/requestId/:id", async (req, res) => {
+app.get("/requestId/:id", async (req, res) => {
   try {
     const request = await RequestModel.find({
       requestId: {
