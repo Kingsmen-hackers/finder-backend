@@ -5,6 +5,7 @@ const { ethers } = require("ethers");
 const cors = require("cors");
 require("dotenv").config();
 const RequestModel = require("./models/Request.model");
+const { isWithinThreshold, threshold } = require("./location");
 const app = express();
 const CONTRACT_ID_EVM = "0x00000000000000000000000000000000004783f1";
 const port = process.env.PORT || 5100;
@@ -28,6 +29,33 @@ app.get("/requests/:buyerAddress", async (req, res) => {
     });
 
     return res.json(buyers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+});
+
+app.get("/requests", async (req, res) => {
+  const { sellerLat, sellerLong } = req.body;
+  try {
+    const requests = await RequestModel.find();
+    const availableRequests = [];
+    for (let i = 0; i < requests.length; i++) {
+      const request = requests[i];
+      const { latitude, longitude } = request;
+      const isAvailable = isWithinThreshold(
+        latitude,
+        longitude,
+        sellerLat,
+        sellerLong,
+        threshold
+      );
+      if (isAvailable) {
+        availableRequests.push(request);
+      }
+    }
+
+    return res.json(availableRequests);
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);
