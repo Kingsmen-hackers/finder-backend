@@ -6,7 +6,7 @@ const cors = require("cors");
 require("dotenv").config();
 const RequestModel = require("./models/Request.model");
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5100;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -18,10 +18,12 @@ mongoose.connect(process.env.MONGO_URI, {
 
 mongoose.set("debug", process.env.NODE_ENV != "production");
 
-app.get("/indexer/load", async (req, res) => {
+app.get("/requests/:buyerAddress", async (req, res) => {
   try {
-    await getMarketPlaceEvents();
-    res.json({ data: "MarketPlace done" });
+    const buyers = await RequestModel.find({
+      buyerAddress: req.params.buyerAddress,
+    });
+    return res.json(buyers);
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);
