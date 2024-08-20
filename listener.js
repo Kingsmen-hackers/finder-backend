@@ -89,6 +89,17 @@ const processRequestCreated = async ({
     const buyerAddress = event.returnValues["buyerAddress"];
     const images = event.returnValues["images"];
     const lifecycle = event.returnValues["lifecycle"];
+    const requestName = event.returnValues["requestName"];
+    const description = event.returnValues["description"];
+    const latitude = event.returnValues["latitude"];
+    const longitude = event.returnValues["longitude"];
+    const buyerId = event.returnValues["buyerId"];
+    const sellerIds = event.returnValues["sellerIds"];
+    const sellersPriceQuote = event.returnValues["sellersPriceQuote"];
+    const lockedSellerId = event.returnValues["lockedSellerId"];
+    const createdAt = event.returnValues["createdAt"];
+    const updatedAt = event.returnValues["updatedAt"];
+
     // get timestamp from block
     const block = await web3.eth.getBlock(event.blockNumber);
     event.timestamp = block.timestamp;
@@ -104,6 +115,16 @@ const processRequestCreated = async ({
         buyerAddress,
         images,
         lifecycle,
+        requestName,
+        description,
+        latitude,
+        longitude,
+        buyerId,
+        sellerIds,
+        sellersPriceQuote,
+        lockedSellerId,
+        createdAt,
+        updatedAt,
       },
       {
         upsert: true,
@@ -126,6 +147,12 @@ const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
     const signature = event.signature;
     const offerId = event.returnValues["offerId"];
     const sellerAddress = event.returnValues["sellerAddress"];
+    const storeName = event.returnValues["storeName"];
+    const price = event.returnValues["price"];
+    const requestId = event.returnValues["requestId"];
+    const images = event.returnValues["images"];
+    const sellerId = event.returnValues["sellerId"];
+
     // get timestamp from block
     const block = await web3.eth.getBlock(event.blockNumber);
     event.timestamp = block.timestamp;
@@ -139,6 +166,11 @@ const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
         signature,
         offerId,
         sellerAddress,
+        storeName,
+        price,
+        requestId,
+        images,
+        sellerId,
       },
       {
         upsert: true,

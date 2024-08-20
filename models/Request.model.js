@@ -15,6 +15,16 @@ const Request = new Schema(
     buyerAddress: String,
     images: [String],
     lifecycle: Number,
+    requestName: String,
+    description: String,
+    latitude: Number,
+    longitude: Number,
+    buyerId: Number,
+    sellerIds: [Number],
+    sellersPriceQuote: Number,
+    lockedSellerId: Number,
+    createdAt: Number,
+    updatedAt: Number,
   },
   {
     timestamps: {

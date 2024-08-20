@@ -13,6 +13,11 @@ const Offer = new Schema(
     signature: String,
     offerId: Number,
     sellerAddress: String,
+    storeName: String,
+    price: Number,
+    requestId: Number,
+    images: [String],
+    sellerId: Number,
   },
   {
     timestamps: {
