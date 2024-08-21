@@ -197,15 +197,19 @@ const processRequestAccepted = async ({ latestBlockNumber, lastScannedBlock }) =
     fromBlock: lastScannedBlock + 1,
     toBlock: latestBlockNumber,
   });
-  await RequestModel.updateOne(
-    { requestId },
-    {
-      lifecycle: 1,
-    },
-    {
-      upsert: true,
-    }
-  );
+  events.forEach(async (event) => {
+    const requestId = event.returnValues["requestId"];
+    await RequestModel.updateOne(
+      { requestId },
+      {
+        lifecycle: 1,
+      },
+      {
+        upsert: true,
+      }
+    );
+  });
+  
 };
 
 module.exports = getMarketPlaceEvents;
