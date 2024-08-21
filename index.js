@@ -48,6 +48,18 @@ app.get("/offers/:requestId", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+app.get("/offers/:sellerAddress", async (req, res) => {
+  try {
+    const offers = await OfferModel.find({
+      sellerAddress: req.params.sellerAddress,
+    });
+
+    return res.json(offers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+});
 app.get("/requestId/:id", async (req, res) => {
   try {
     const request = await RequestModel.find({

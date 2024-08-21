@@ -163,7 +163,7 @@ const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
     event.timestamp = block.timestamp;
 
     await OfferModel.updateOne(
-      { transactionHash },
+      { transactionHash ,requestId},
       {
         address,
         transactionHash,
@@ -209,7 +209,6 @@ const processRequestAccepted = async ({ latestBlockNumber, lastScannedBlock }) =
       }
     );
   });
-  
 };
 
 module.exports = getMarketPlaceEvents;
