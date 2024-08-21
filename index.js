@@ -5,6 +5,7 @@ const { ethers } = require("ethers");
 const cors = require("cors");
 require("dotenv").config();
 const RequestModel = require("./models/Request.model");
+const OfferModel = require("./models/Offer.model");
 const { isWithinThreshold, threshold } = require("./location");
 const app = express();
 const CONTRACT_ID_EVM = "0x00000000000000000000000000000000004783f1";
@@ -29,6 +30,19 @@ app.get("/requests/:buyerAddress", async (req, res) => {
     });
 
     return res.json(buyers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+});
+
+app.get("/offers/:requestId", async (req, res) => {
+  try {
+    const offers = await OfferModel.find({
+      requestId: req.params.requestId,
+    });
+
+    return res.json(offers);
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);

@@ -155,6 +155,8 @@ const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
     const images = event.returnValues["images"];
     const sellerId = event.returnValues["sellerId"];
 
+ 
+
     // get timestamp from block
     const block = await web3.eth.getBlock(event.blockNumber);
     event.timestamp = block.timestamp;
@@ -179,6 +181,16 @@ const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
       }
     );
   });
+
+  await RequestModel.updateOne(
+    { requestId },
+    {
+      lifecycle: 2,
+    },
+    {
+      upsert: true,
+    }
+  );
 };
 module.exports = getMarketPlaceEvents;
 
