@@ -204,7 +204,7 @@ const processRequestAccepted = async ({ latestBlockNumber, lastScannedBlock }) =
       { requestId },
       {
         lifecycle: 1,
-        lockedSellerId: event.returnValues["sellerId"],
+        lockedSellerId: sellerId,
       },
       {
         upsert: true,
