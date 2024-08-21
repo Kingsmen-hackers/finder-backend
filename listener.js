@@ -163,7 +163,7 @@ const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
     event.timestamp = block.timestamp;
 
     await OfferModel.updateOne(
-      { transactionHash ,requestId},
+      { transactionHash},
       {
         address,
         transactionHash,
