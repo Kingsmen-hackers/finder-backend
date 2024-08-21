@@ -19,7 +19,7 @@ const finderABI = JSON.parse(
 
 // get websocket from aurora api
 const web3 = new Web3(process.env.CONTRACT_RPC);
-const HouseNFTEvent = new web3.eth.Contract(
+const MatchEvents = new web3.eth.Contract(
   finderABI,
   process.env.CONTRACT_ADDRESS
 );
@@ -75,7 +75,7 @@ const processRequestCreated = async ({
   latestBlockNumber,
   lastScannedBlock,
 }) => {
-  const events = await HouseNFTEvent.getPastEvents("RequestCreated", {
+  const events = await MatchEvents.getPastEvents("RequestCreated", {
     fromBlock: lastScannedBlock + 1,
     toBlock: latestBlockNumber,
   });
@@ -136,12 +136,12 @@ const processRequestCreated = async ({
   });
 };
 const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
-  const events = await HouseNFTEvent.getPastEvents("OfferCreated", {
+  const events = await MatchEvents.getPastEvents("OfferCreated", {
     fromBlock: lastScannedBlock + 1,
     toBlock: latestBlockNumber,
   });
 
-  console.log(events);
+  
 
   // Process the events
   events.forEach(async (event) => {
@@ -156,8 +156,6 @@ const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
     const requestId = event.returnValues["requestId"];
     const images = event.returnValues["images"];
     const sellerId = event.returnValues["sellerId"];
-
- 
 
     // get timestamp from block
     const block = await web3.eth.getBlock(event.blockNumber);
@@ -193,6 +191,22 @@ const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
     );
   });
 };
+const processRequestAccepted = async ({ latestBlockNumber, lastScannedBlock }) => {
+  const events = await MatchEvents.getPastEvents("RequestAccepted", {
+    fromBlock: lastScannedBlock + 1,
+    toBlock: latestBlockNumber,
+  });
+  await RequestModel.updateOne(
+    { requestId },
+    {
+      lifecycle: 1,
+    },
+    {
+      upsert: true,
+    }
+  );
+};
+
 module.exports = getMarketPlaceEvents;
 
 setInterval(async () => {
