@@ -52,6 +52,7 @@ const getMarketPlaceEvents = async () => {
 
     await processRequestCreated(option);
     await processOfferCreated(option);
+    await processRequestAccepted(option);
 
     lastScannedBlock = lastScannedBlockOffset;
 
