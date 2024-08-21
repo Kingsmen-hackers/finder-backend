@@ -4,6 +4,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const RequestModel = require("./models/Request.model");
 const LastBlockModel = require("./models/LastBlock.model");
+const OfferModel = require("./models/Offer.model");
 
 require("dotenv").config();
 
@@ -79,7 +80,6 @@ const processRequestCreated = async ({
     toBlock: latestBlockNumber,
   });
 
-  console.log(events);
 
   // Process the events
   events.forEach(async (event) => {
@@ -141,6 +141,8 @@ const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
     toBlock: latestBlockNumber,
   });
 
+  console.log(events);
+
   // Process the events
   events.forEach(async (event) => {
     const address = event.address;
@@ -180,17 +182,16 @@ const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
         upsert: true,
       }
     );
+    await RequestModel.updateOne(
+      { requestId },
+      {
+        lifecycle: 2,
+      },
+      {
+        upsert: true,
+      }
+    );
   });
-
-  await RequestModel.updateOne(
-    { requestId },
-    {
-      lifecycle: 2,
-    },
-    {
-      upsert: true,
-    }
-  );
 };
 module.exports = getMarketPlaceEvents;
 
