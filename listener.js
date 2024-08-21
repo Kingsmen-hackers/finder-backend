@@ -199,10 +199,12 @@ const processRequestAccepted = async ({ latestBlockNumber, lastScannedBlock }) =
   });
   events.forEach(async (event) => {
     const requestId = event.returnValues["requestId"];
+    const sellerId = event.returnValues["sellerId"];
     await RequestModel.updateOne(
       { requestId },
       {
         lifecycle: 1,
+        lockedSellerId: event.returnValues["sellerId"],
       },
       {
         upsert: true,
