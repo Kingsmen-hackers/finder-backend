@@ -13,6 +13,8 @@ const matchContract = new web3.eth.Contract(
   process.env.CONTRACT_ADDRESS
 );
 
+export const GET_MONGO_URI = `${process.env.MONGO_URI}${process.env.CONTRACT_ADDRESS}`;
+
 module.exports = {
   matchContract,
   web3,

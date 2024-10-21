@@ -8,7 +8,7 @@ const RequestModel = require("./models/Request.model");
 const OfferModel = require("./models/Offer.model");
 const { isWithinThreshold, threshold } = require("./location");
 const UserCreatedModel = require("./models/UserCreated.model");
-const { matchContract } = require("./base");
+const { matchContract, GET_MONGO_URI } = require("./base");
 const app = express();
 const port = process.env.PORT || 5100;
 
@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 function connectWithRetry() {
   mongoose
-    .connect(process.env.MONGO_URI)
+    .connect(GET_MONGO_URI)
     .then(() => {
       console.log("Connected to Database");
     })

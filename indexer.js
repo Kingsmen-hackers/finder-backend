@@ -3,13 +3,13 @@ const RequestModel = require("./models/Request.model");
 const LastBlockModel = require("./models/LastBlock.model");
 const OfferModel = require("./models/Offer.model");
 const UserCreatedModel = require("./models/UserCreated.model");
-const { web3, matchContract } = require("./base");
+const { web3, matchContract, GET_MONGO_URI } = require("./base");
 
 require("dotenv").config();
 
 function connectWithRetry() {
   mongoose
-    .connect(process.env.MONGO_URI)
+    .connect(GET_MONGO_URI)
     .then(() => {
       console.log("Connected to Database");
     })
