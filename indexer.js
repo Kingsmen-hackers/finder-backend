@@ -55,6 +55,7 @@ const getMarketPlaceEvents = async () => {
     await processRequestCreated(option);
     await processOfferCreated(option);
     await processRequestAccepted(option);
+    await processRequestDeleted(option);
     await processOfferAccepted(option);
     await processUserCreated(option);
     await processUserUpdated(option);
@@ -237,6 +238,25 @@ const processRequestAccepted = async ({
         updatedAt,
         sellersPriceQuote,
       },
+      {
+        upsert: true,
+      }
+    );
+  });
+};
+
+const processRequestDeleted = async ({
+  latestBlockNumber,
+  lastScannedBlock,
+}) => {
+  const events = await matchContract.getPastEvents("RequestDeleted", {
+    fromBlock: lastScannedBlock + 1,
+    toBlock: latestBlockNumber,
+  });
+  events.forEach(async (event) => {
+    const { requestId } = event.returnValues;
+    await RequestModel.deleteOne(
+      { requestId },
       {
         upsert: true,
       }
