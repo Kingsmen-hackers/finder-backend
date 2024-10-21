@@ -10,7 +10,7 @@ const { isWithinThreshold, threshold } = require("./location");
 const UserCreatedModel = require("./models/UserCreated.model");
 const { matchContract } = require("./base");
 const app = express();
-const port = process.env.PORT || 5100;x
+const port = process.env.PORT || 5100;
 
 app.use(cors());
 app.use(bodyParser.json());
