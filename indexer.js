@@ -59,6 +59,7 @@ const getMarketPlaceEvents = async () => {
     await processOfferAccepted(option);
     await processUserCreated(option);
     await processUserUpdated(option);
+    await processRequestPaymentTransacted(option);
 
     lastScannedBlock = lastScannedBlockOffset;
 
@@ -88,7 +89,7 @@ const processRequestCreated = async ({
   });
 
   // Process the events
-  events.forEach(async (event) => {
+  for (const event of events) {
     const address = event.address;
     const transactionHash = event.transactionHash;
     const eventName = event.event;
@@ -141,7 +142,7 @@ const processRequestCreated = async ({
       }
     );
     console.log(result);
-  });
+  }
 };
 const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
   const events = await matchContract.getPastEvents("OfferCreated", {
@@ -150,7 +151,7 @@ const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
   });
 
   // Process the events
-  events.forEach(async (event) => {
+  for (const event of events) {
     const address = event.address;
     const transactionHash = event.transactionHash;
     const eventName = event.event;
@@ -217,7 +218,7 @@ const processOfferCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
         }
       );
     }
-  });
+  }
 };
 const processRequestAccepted = async ({
   latestBlockNumber,
@@ -227,7 +228,8 @@ const processRequestAccepted = async ({
     fromBlock: lastScannedBlock + 1,
     toBlock: latestBlockNumber,
   });
-  events.forEach(async (event) => {
+
+  for (const event of events) {
     const { requestId, sellerId, updatedAt, sellersPriceQuote } =
       event.returnValues;
     await RequestModel.updateOne(
@@ -242,7 +244,30 @@ const processRequestAccepted = async ({
         upsert: true,
       }
     );
+  }
+};
+
+const processRequestPaymentTransacted = async ({
+  latestBlockNumber,
+  lastScannedBlock,
+}) => {
+  const events = await matchContract.getPastEvents("RequestPaymentTransacted", {
+    fromBlock: lastScannedBlock + 1,
+    toBlock: latestBlockNumber,
   });
+
+  for (const event of events) {
+    const { requestId } = event.returnValues;
+    await RequestModel.updateOne(
+      { requestId },
+      {
+        lifecycle: 4,
+      },
+      {
+        upsert: true,
+      }
+    );
+  }
 };
 
 const processRequestDeleted = async ({
@@ -253,7 +278,7 @@ const processRequestDeleted = async ({
     fromBlock: lastScannedBlock + 1,
     toBlock: latestBlockNumber,
   });
-  events.forEach(async (event) => {
+  for (const event of events) {
     const { requestId } = event.returnValues;
     await RequestModel.deleteOne(
       { requestId },
@@ -261,7 +286,7 @@ const processRequestDeleted = async ({
         upsert: true,
       }
     );
-  });
+  }
 };
 
 const processOfferAccepted = async ({
@@ -272,7 +297,7 @@ const processOfferAccepted = async ({
     fromBlock: lastScannedBlock + 1,
     toBlock: latestBlockNumber,
   });
-  events.forEach(async (event) => {
+  for (const event of events) {
     const { offerId, isAccepted } = event.returnValues;
     await OfferModel.updateOne(
       { offerId },
@@ -283,7 +308,7 @@ const processOfferAccepted = async ({
         upsert: true,
       }
     );
-  });
+  }
 };
 
 const processUserCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
@@ -291,7 +316,7 @@ const processUserCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
     fromBlock: lastScannedBlock + 1,
     toBlock: latestBlockNumber,
   });
-  events.forEach(async (event) => {
+  for (const event of events) {
     const address = event.address;
     const transactionHash = event.transactionHash;
     const eventName = event.event;
@@ -313,14 +338,14 @@ const processUserCreated = async ({ latestBlockNumber, lastScannedBlock }) => {
         upsert: true,
       }
     );
-  });
+  }
 };
 const processUserUpdated = async ({ latestBlockNumber, lastScannedBlock }) => {
   const events = await matchContract.getPastEvents("UserUpdated", {
     fromBlock: lastScannedBlock + 1,
     toBlock: latestBlockNumber,
   });
-  events.forEach(async (event) => {
+  for (const event of events) {
     const address = event.address;
     const transactionHash = event.transactionHash;
     const eventName = event.event;
@@ -342,7 +367,7 @@ const processUserUpdated = async ({ latestBlockNumber, lastScannedBlock }) => {
         upsert: true,
       }
     );
-  });
+  }
 };
 
 module.exports = getMarketPlaceEvents;
