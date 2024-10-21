@@ -3,6 +3,7 @@ const RequestModel = require("./models/Request.model");
 const LastBlockModel = require("./models/LastBlock.model");
 const OfferModel = require("./models/Offer.model");
 const UserCreatedModel = require("./models/UserCreated.model");
+const RequestPaymentTransactedModel = require("./models/RequestPaymentTransacted.model");
 const { web3, matchContract, GET_MONGO_URI } = require("./base");
 
 require("dotenv").config();
@@ -257,11 +258,27 @@ const processRequestPaymentTransacted = async ({
   });
 
   for (const event of events) {
-    const { requestId } = event.returnValues;
+    const { requestId, sellerId, buyerId, amount, token, timestamp } =
+      event.returnValues;
     await RequestModel.updateOne(
       { requestId },
       {
         lifecycle: 4,
+      },
+      {
+        upsert: true,
+      }
+    );
+
+    await RequestPaymentTransactedModel.updateOne(
+      { requestId },
+      {
+        timestamp,
+        amount,
+        token,
+        requestId,
+        sellerId,
+        buyerId,
       },
       {
         upsert: true,
