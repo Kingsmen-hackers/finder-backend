@@ -33,18 +33,6 @@ function isWithinThreshold(
   return distance <= threshold;
 }
 
-// Example usage
-const buyer = { lat: 6.5244, lon: 3.3792 }; // Example buyer coordinates
-const vendor = { lat: 6.5248, lon: 3.3795 }; // Example vendor coordinates
-
-if (
-  isWithinThreshold(buyer.lat, buyer.lon, vendor.lat, vendor.lon, threshold)
-) {
-  console.log("The buyer is within the threshold distance of the vendor.");
-} else {
-  console.log("The buyer is outside the threshold distance of the vendor.");
-}
-
 module.exports = {
   calculateDistance,
   threshold,
