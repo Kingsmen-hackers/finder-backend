@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "backend": "nohup node app.js &",
-    "indexer": "nohup node indexer.js &"
+    "backend": "node app.js",
+    "indexer": "node indexer.js"
   },
   "keywords": [],
   "author": "",
