@@ -7,19 +7,31 @@ require("dotenv").config();
 const RequestModel = require("./models/Request.model");
 const OfferModel = require("./models/Offer.model");
 const { isWithinThreshold, threshold } = require("./location");
+const UserCreatedModel = require("./models/UserCreated.model");
+const { matchContract } = require("./base");
 const app = express();
-const CONTRACT_ID_EVM = "0x00000000000000000000000000000000004783f1";
-const port = process.env.PORT || 5100;
+const port = process.env.PORT || 5100;x
 
 app.use(cors());
 app.use(bodyParser.json());
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+function connectWithRetry() {
+  mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => {
+      console.log("Connected to Database");
+    })
+    .catch((err) => {
+      console.error(
+        "Failed to connect to MongoDB, retrying in 5 seconds...",
+        err
+      );
+      setTimeout(connectWithRetry, 5000);
+    });
+  mongoose.set("debug", process.env.NODE_ENV != "production");
+}
 
-mongoose.set("debug", process.env.NODE_ENV != "production");
+connectWithRetry();
 
 app.get("/requests/:buyerAddress", async (req, res) => {
   try {
@@ -94,6 +106,45 @@ app.post("/requests", async (req, res) => {
     }
 
     return res.json(availableRequests);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+});
+
+app.get("/user/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const userInfo = await UserCreatedModel.findOne({
+      userId: userId,
+    });
+
+    const userData = await matchContract.methods
+      .users(userInfo.userAddress)
+      .call();
+
+    return res.json({ ...userData, userAddress: userInfo.userAddress });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+});
+
+app.get("/accepted-requests/:sellerAddress", async (req, res) => {
+  try {
+    const { sellerAddress } = req.params;
+
+    const acceptedRequests = await OfferModel.find({
+      sellerAddress: { $regex: new RegExp(`^${sellerAddress}$`, "i") },
+    });
+
+    const requestIds = acceptedRequests.map((request) => request.requestId);
+    const requests = await RequestModel.find({
+      requestId: { $in: requestIds },
+    });
+
+    return res.json(requests);
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);

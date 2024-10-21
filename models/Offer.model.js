@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-/**
- * Request Schema
- */
-
 const Offer = new Schema(
   {
     address: String,
@@ -18,6 +14,8 @@ const Offer = new Schema(
     requestId: Number,
     images: [String],
     sellerId: Number,
+    isAccepted: Boolean,
+    sellerIds: [Number],
   },
   {
     timestamps: {

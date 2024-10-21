@@ -2,12 +2,12 @@
   "name": "listener",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "backend": "nohup node index.js &",
-    "indexer": "nohup node listener.js &"
+    "start": "node app.js",
+    "backend": "nohup node app.js &",
+    "indexer": "nohup node indexer.js &"
   },
   "keywords": [],
   "author": "",
