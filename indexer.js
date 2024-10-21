@@ -61,6 +61,7 @@ const getMarketPlaceEvents = async () => {
     await processUserCreated(option);
     await processUserUpdated(option);
     await processRequestPaymentTransacted(option);
+    await processRequestMarkedAsCompleted(option);
 
     lastScannedBlock = lastScannedBlockOffset;
 
@@ -301,6 +302,25 @@ const processRequestDeleted = async ({
       { requestId },
       {
         upsert: true,
+      }
+    );
+  }
+};
+
+const processRequestMarkedAsCompleted = async ({
+  latestBlockNumber,
+  lastScannedBlock,
+}) => {
+  const events = await matchContract.getPastEvents("RequestMarkedAsCompleted", {
+    fromBlock: lastScannedBlock + 1,
+    toBlock: latestBlockNumber,
+  });
+  for (const event of events) {
+    const { requestId } = event.returnValues;
+    await RequestModel.updateOne(
+      { requestId },
+      {
+        lifecycle: 5,
       }
     );
   }
