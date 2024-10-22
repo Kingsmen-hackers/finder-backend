@@ -9,6 +9,7 @@ const OfferModel = require("./models/Offer.model");
 const { isWithinThreshold, threshold } = require("./location");
 const UserCreatedModel = require("./models/UserCreated.model");
 const { matchContract, GET_MONGO_URI } = require("./base");
+const RequestPaymentTransactedModel = require("./models/RequestPaymentTransacted.model");
 const app = express();
 const port = process.env.PORT || 5100;
 
@@ -145,6 +146,19 @@ app.get("/accepted-requests/:sellerAddress", async (req, res) => {
     });
 
     return res.json(requests);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+});
+
+app.get("/transactions/:buyerId", async (req, res) => {
+  try {
+    const transactions = await RequestPaymentTransactedModel.find({
+      buyerId: req.params.buyerId,
+    });
+
+    return res.json(transactions);
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);
