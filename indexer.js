@@ -43,11 +43,11 @@ const getMarketPlaceEvents = async () => {
       });
     }
     let lastScannedBlock = _lastScannedBlock.blockNumber;
-    let lastScannedBlockOffset = lastScannedBlock + 2000;
+    let lastScannedBlockOffset = Math.min(
+      lastScannedBlock + 2000,
+      latestBlockNumber
+    );
 
-    if (lastScannedBlockOffset > latestBlockNumber) {
-      lastScannedBlockOffset = latestBlockNumber;
-    }
     const option = {
       latestBlockNumber: lastScannedBlockOffset,
       lastScannedBlock,
