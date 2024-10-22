@@ -259,8 +259,16 @@ const processRequestPaymentTransacted = async ({
   });
 
   for (const event of events) {
-    const { requestId, sellerId, buyerId, amount, token, timestamp } =
-      event.returnValues;
+    const {
+      requestId,
+      sellerId,
+      buyerId,
+      amount,
+      token,
+      timestamp,
+      createdAt,
+      updatedAt,
+    } = event.returnValues;
     await RequestModel.updateOne(
       { requestId },
       {
@@ -280,6 +288,8 @@ const processRequestPaymentTransacted = async ({
         requestId,
         sellerId,
         buyerId,
+        createdAt,
+        updatedAt,
       },
       {
         upsert: true,

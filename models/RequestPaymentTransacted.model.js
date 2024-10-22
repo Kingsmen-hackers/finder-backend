@@ -9,6 +9,8 @@ const RequestPaymentTransacted = new Schema(
     requestId: Number,
     sellerId: Number,
     buyerId: Number,
+    createdAt: Number,
+    updatedAt: Number,
   },
   {
     timestamps: {
