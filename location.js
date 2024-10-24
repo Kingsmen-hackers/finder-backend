@@ -1,6 +1,6 @@
 require("dotenv").config();
 const threshold = process.env.THRESHOLD || 500; // Set your threshold in meters
-function toRadians(degrees) {
+export function toRadians(degrees) {
   return degrees * (Math.PI / 180);
 }
 
@@ -21,7 +21,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return R * c; // Distance in meters
 }
 
-function isWithinThreshold(
+export function isWithinThreshold(
   buyerLat,
   buyerLon,
   vendorLat,
@@ -32,9 +32,3 @@ function isWithinThreshold(
   const distance = calculateDistance(buyerLat, buyerLon, vendorLat, vendorLon);
   return distance <= threshold;
 }
-
-module.exports = {
-  calculateDistance,
-  threshold,
-  isWithinThreshold,
-};

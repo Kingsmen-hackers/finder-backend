@@ -2,18 +2,18 @@ const Web3 = require("web3");
 const fs = require("fs");
 const path = require("path");
 require("dotenv").config();
-const matchABI = JSON.parse(
+export const matchABI = JSON.parse(
   fs.readFileSync(path.join(__dirname, "./match.abi.json"), "utf8")
 );
 
 // get websocket from aurora api
-const web3 = new Web3(process.env.CONTRACT_RPC);
-const matchContract = new web3.eth.Contract(
+export const web3 = new Web3(process.env.CONTRACT_RPC);
+export const matchContract = new web3.eth.Contract(
   matchABI,
   process.env.CONTRACT_ADDRESS
 );
 
-function truncateToBytes(str, byteLimit) {
+export function truncateToBytes(str, byteLimit) {
   let bytes = 0;
   let result = "";
 
@@ -44,7 +44,7 @@ function truncateToBytes(str, byteLimit) {
   return result;
 }
 
-const GET_MONGO_URI = `${
+export const GET_MONGO_URI = `${
   process.env.MONGO_URI
 }${process.env.CONTRACT_ADDRESS.slice(-38)}`;
 

@@ -23,4 +23,7 @@ const RequestPaymentTransacted = new Schema(
   }
 );
 
-module.exports = mongoose.model("requestTransaction", RequestPaymentTransacted);
+export const RequestPaymentTransactedModel = mongoose.model(
+  "requestTransaction",
+  RequestPaymentTransacted
+);

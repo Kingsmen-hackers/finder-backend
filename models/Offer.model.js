@@ -28,4 +28,4 @@ const Offer = new Schema(
   }
 );
 
-module.exports = mongoose.model("offer", Offer);
+export const OfferModel = mongoose.model("offer", Offer);

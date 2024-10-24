@@ -16,4 +16,4 @@ const LastBlock = new Schema(
   }
 );
 
-module.exports = mongoose.model("last_block", LastBlock);
+export const lastBlockModel = mongoose.model("last_block", LastBlock);

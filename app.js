@@ -1,18 +1,24 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const { ethers } = require("ethers");
-const cors = require("cors");
-require("dotenv").config();
-const RequestModel = require("./models/Request.model");
-const OfferModel = require("./models/Offer.model");
-const { isWithinThreshold, threshold } = require("./location");
-const UserCreatedModel = require("./models/UserCreated.model");
-const { matchContract, GET_MONGO_URI } = require("./base");
-const RequestPaymentTransactedModel = require("./models/RequestPaymentTransacted.model");
+import { Connection } from "@solana/web3.js";
+import { solanaMarketAbi } from "./blockchain/abi.js";
+import { programID } from "./utils/constants.js";
+import { BorshCoder } from "@project-serum/anchor";
+import { CoinDecimals } from "./types/index.js";
+import { paymentModel } from "./models/paymentinfo.model.js";
+import { RequestModel } from "./models/Request.model.js";
+import { OfferModel } from "./models/Offer.model.js";
+import { UserCreatedModel } from "./models/UserCreated.model.js";
+import { isWithinThreshold, threshold } from "./location.js";
+import { matchContract, GET_MONGO_URI } from "./base.js";
+import { RequestPaymentTransactedModel } from "./models/RequestPaymentTransacted.model.js";
+import express from "express";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
 const app = express();
 const port = process.env.PORT || 5100;
-
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -159,6 +165,104 @@ app.get("/transactions/:buyerId", async (req, res) => {
     });
 
     return res.json(transactions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+});
+
+app.post("/api/payment/:requestId", async (req, res) => {
+  try {
+    connectWithRetry();
+    const { requestId, transactionHash } = req.body;
+    await paymentModel.updateOne(
+      { requestId: requestId },
+      { transactionHash, requestId },
+      { upsert: true }
+    );
+    return res.json({ success: true });
+  } catch (error) {
+    console.log("Error", error);
+    return res.json({ error: error, success: false });
+  }
+});
+
+app.post("/api/:requestId", async (req, res) => {
+  try {
+    const requestId = req.params.requestId;
+    const preflightCommitment = "processed";
+    const connection = new Connection(
+      process.env.SOLANA_RPC_URL,
+      preflightCommitment
+    );
+    const abiDecoder = new BorshCoder(solanaMarketAbi);
+    const filter = abiDecoder.accounts.memcmp("RequestPaymentTransaction");
+    const accounts = await connection.getParsedProgramAccounts(programID, {
+      filters: [
+        {
+          dataSize: filter.dataSize,
+          memcmp: {
+            offset: 8 + 32,
+            bytes: requestId,
+          },
+        },
+      ],
+    });
+
+    let decodedAccount;
+
+    for (const account of accounts) {
+      try {
+        decodedAccount = abiDecoder.accounts.decode(
+          "RequestPaymentTransaction",
+          account.account.data
+        );
+        break;
+      } catch (e) {}
+    }
+    const paymentMade = await paymentModel.findOne({
+      requestId: Number(decodedAccount.requestId),
+    });
+
+    if (paymentMade) {
+      return paymentMade;
+    }
+
+    const tokenInfo = Object.keys(decodedAccount.token)[0];
+
+    let tokenMint = "";
+
+    switch (tokenInfo) {
+      case "pyusdt":
+        tokenMint = process.env.PY_USD_MINT;
+        break;
+      case "solana":
+        tokenMint = process.env.SOL_MINT;
+        break;
+    }
+    const payload = {
+      to: decodedAccount.sellerAuthority.toBase58(),
+      token: tokenMint,
+      amount: Number(decodedAccount.amount).toString(),
+    };
+
+    const data = await fetch(
+      `https://api.portalhq.io/api/v3/clients/me/chains/${process.env.SOLANA_CHAIN_ID}/assets/send/build-transaction`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.PORTAL_CLIENT_API_KEY}`,
+        },
+        body: JSON.stringify({
+          to: payload.to,
+          token: payload.token,
+          amount: (+payload.amount / 10 ** CoinDecimals[tokenInfo]).toString(),
+        }),
+      }
+    );
+
+    return res.json(await data.json());
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);
