@@ -1,12 +1,12 @@
-const mongoose = require("mongoose");
-const RequestModel = require("./models/Request.model");
-const LastBlockModel = require("./models/LastBlock.model");
-const OfferModel = require("./models/Offer.model");
-const UserCreatedModel = require("./models/UserCreated.model");
-const RequestPaymentTransactedModel = require("./models/RequestPaymentTransacted.model");
-const { web3, matchContract, GET_MONGO_URI } = require("./base");
-
-require("dotenv").config();
+import mongoose from "mongoose";
+import RequestModel from "./models/Request.model";
+import { LastBlockModel } from "./models/LastBlock.model";
+import { OfferModel } from "./models/Offer.model";
+import { UserCreatedModel } from "./models/UserCreated.model";
+import { RequestPaymentTransactedModel } from "./models/RequestPaymentTransacted.model";
+import { web3, matchContract, GET_MONGO_URI } from "./base";
+import dotenv from "dotenv";
+dotenv.config();
 
 function connectWithRetry() {
   mongoose
@@ -416,8 +416,6 @@ const processUserUpdated = async ({ latestBlockNumber, lastScannedBlock }) => {
     );
   }
 };
-
-module.exports = getMarketPlaceEvents;
 
 setInterval(async () => {
   await getMarketPlaceEvents();

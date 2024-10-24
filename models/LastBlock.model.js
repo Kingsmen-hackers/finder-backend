@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+
 const Schema = mongoose.Schema;
 
 const LastBlock = new Schema(
@@ -16,4 +17,4 @@ const LastBlock = new Schema(
   }
 );
 
-export const lastBlockModel = mongoose.model("last_block", LastBlock);
+export const LastBlockModel = mongoose.model("last_block", LastBlock);

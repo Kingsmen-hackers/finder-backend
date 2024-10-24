@@ -1,15 +1,12 @@
-const Web3 = require("web3");
-const fs = require("fs");
-const path = require("path");
-require("dotenv").config();
-export const matchABI = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "./match.abi.json"), "utf8")
-);
+import Web3 from "web3";
+import dotenv from "dotenv";
+dotenv.config();
+import { ethMarketAbi } from "./blockchain/match.eth.abi.js";
 
 // get websocket from aurora api
 export const web3 = new Web3(process.env.CONTRACT_RPC);
 export const matchContract = new web3.eth.Contract(
-  matchABI,
+  ethMarketAbi,
   process.env.CONTRACT_ADDRESS
 );
 
@@ -47,9 +44,3 @@ export function truncateToBytes(str, byteLimit) {
 export const GET_MONGO_URI = `${
   process.env.MONGO_URI
 }${process.env.CONTRACT_ADDRESS.slice(-38)}`;
-
-module.exports = {
-  matchContract,
-  web3,
-  GET_MONGO_URI,
-};

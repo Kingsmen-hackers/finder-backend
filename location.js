@@ -1,5 +1,6 @@
-require("dotenv").config();
-const threshold = process.env.THRESHOLD || 500; // Set your threshold in meters
+import dotenv from "dotenv";
+dotenv.config();
+export const threshold = process.env.THRESHOLD || 500; // Set your threshold in meters
 export function toRadians(degrees) {
   return degrees * (Math.PI / 180);
 }
