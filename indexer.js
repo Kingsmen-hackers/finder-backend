@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import { RequestModel } from "./models/Request.model";
-import { LastBlockModel } from "./models/LastBlock.model";
-import { OfferModel } from "./models/Offer.model";
-import { UserCreatedModel } from "./models/UserCreated.model";
-import { RequestPaymentTransactedModel } from "./models/RequestPaymentTransacted.model";
-import { web3, matchContract, GET_MONGO_URI } from "./base";
+import { RequestModel } from "./models/Request.model.js";
+import { LastBlockModel } from "./models/LastBlock.model.js";
+import { OfferModel } from "./models/Offer.model.js";
+import { UserCreatedModel } from "./models/UserCreated.model.js";
+import { RequestPaymentTransactedModel } from "./models/RequestPaymentTransacted.model.js";
+import { web3, matchContract, GET_MONGO_URI } from "./base.js";
 import dotenv from "dotenv";
 dotenv.config();
 
