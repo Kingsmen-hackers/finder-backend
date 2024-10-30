@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import RequestModel from "./models/Request.model";
+import { RequestModel } from "./models/Request.model";
 import { LastBlockModel } from "./models/LastBlock.model";
 import { OfferModel } from "./models/Offer.model";
 import { UserCreatedModel } from "./models/UserCreated.model";
