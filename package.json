@@ -15,6 +15,7 @@
     "@project-serum/anchor": "^0.26.0",
     "@solana/web3.js": "^1.91.4",
     "axios": "^1.4.0",
+    "certifi": "^14.5.15",
     "dotenv": "^16.3.1",
     "ethers": "5.7.2",
     "mongoose": "^7.3.1",

@@ -6,11 +6,15 @@ import { UserCreatedModel } from "./models/UserCreated.model.js";
 import { RequestPaymentTransactedModel } from "./models/RequestPaymentTransacted.model.js";
 import { web3, matchContract, GET_MONGO_URI } from "./base.js";
 import dotenv from "dotenv";
+import certifi from "certifi";
 dotenv.config();
 
 function connectWithRetry() {
   mongoose
-    .connect(GET_MONGO_URI)
+    .connect(GET_MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
     .then(() => {
       console.log("Connected to Database");
     })

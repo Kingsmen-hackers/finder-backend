@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 
 function connectWithRetry() {
   mongoose
-    .connect(GET_MONGO_URI)
+    .connect(GET_MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
       console.log("Connected to Database");
     })
