@@ -16,6 +16,11 @@ export const ethMarketAbi = [
   },
   {
     inputs: [],
+    name: "Marketplace__InsufficientAllowance",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "Marketplace__InsufficientFunds",
     type: "error",
   },
@@ -81,6 +86,16 @@ export const ethMarketAbi = [
   },
   {
     inputs: [],
+    name: "Marketplace__StoreNeededToCreateOffer",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Marketplace__TokenAssociationFailed",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "Marketplace__UnSupportedChainId",
     type: "error",
   },
@@ -103,19 +118,25 @@ export const ethMarketAbi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: "bool",
-        name: "enabled",
-        type: "bool",
+        indexed: true,
+        internalType: "address",
+        name: "contractAddress",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "tokenAddress",
+        type: "address",
       },
       {
         indexed: false,
-        internalType: "uint256",
-        name: "userId",
-        type: "uint256",
+        internalType: "int64",
+        name: "result",
+        type: "int64",
       },
     ],
-    name: "LocationEnabled",
+    name: "AssociationSuccessful",
     type: "event",
   },
   {
@@ -541,6 +562,19 @@ export const ethMarketAbi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "tokenAddress",
+        type: "address",
+      },
+    ],
+    name: "associateToken",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "_price",
         type: "uint256",
@@ -679,13 +713,24 @@ export const ethMarketAbi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "getAggregatorV3",
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "requestId",
+        type: "uint256",
+      },
+      {
+        internalType: "enum Marketplace.CoinPayment",
+        name: "coin",
+        type: "uint8",
+      },
+    ],
+    name: "getConversionRate",
     outputs: [
       {
-        internalType: "contract AggregatorV3Interface",
+        internalType: "uint256",
         name: "",
-        type: "address",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
