@@ -424,4 +424,4 @@ const processUserUpdated = async ({ latestBlockNumber, lastScannedBlock }) => {
 setInterval(async () => {
   await getMarketPlaceEvents();
   console.log("interval called");
-}, 5000);
+}, 2500);
