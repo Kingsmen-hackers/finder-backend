@@ -30,7 +30,7 @@ function connectWithRetry() {
 
 connectWithRetry();
 
-export const getMarketPlaceEvents = async () => {
+const getMarketPlaceEvents = async () => {
   try {
     let latestBlockNumber = await web3.eth.getBlockNumber();
 
@@ -421,7 +421,7 @@ const processUserUpdated = async ({ latestBlockNumber, lastScannedBlock }) => {
   }
 };
 
-// setInterval(async () => {
-//   await getMarketPlaceEvents();
-//   console.log("interval called");
-// }, 2500);
+setInterval(async () => {
+  await getMarketPlaceEvents();
+  console.log("interval called");
+}, 2500);

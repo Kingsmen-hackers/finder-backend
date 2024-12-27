@@ -15,7 +15,6 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import { getMarketPlaceEvents } from "./indexer.js";
 
 dotenv.config();
 const app = express();
@@ -188,11 +187,6 @@ app.post("/api/payment/:requestId", async (req, res) => {
   }
 });
 
-app.get("/api/ql", async (req, res) => {
-  try {
-    await getMarketPlaceEvents();
-  } catch (_) {}
-});
 app.post("/api/:requestId", async (req, res) => {
   try {
     const requestId = req.params.requestId;
